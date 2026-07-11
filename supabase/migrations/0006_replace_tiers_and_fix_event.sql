@@ -42,12 +42,12 @@ where event_id = 'ad40d369-f379-4f2a-a19f-41c5fe7d1f72';
 insert into public.ticket_tiers
   (event_id, name, description, price_gbp, capacity, remaining, max_per_order, guests_per_unit, status)
 values
-  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'Standard Single',           'Super early bird standard entry for one guest.',                          75.00, 120, 120, 6, 1,  'active'),
-  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'Standard Couples',          'Super early bird standard entry for two guests.',                         145.00,  60,  60, 4, 2,  'active'),
-  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'Standard Group of 10',      'Super early bird group booking for ten guests.',                          700.00,  12,  12, 1, 10, 'active'),
-  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'VIP Experience Single',     'VIP seated service plus a 3-course plated dinner for one guest.',          90.00,  80,  80, 6, 1,  'active'),
-  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'VIP Experience Couples',    'VIP seated service plus a 3-course plated dinner for two guests.',        170.00,  40,  40, 4, 2,  'active'),
-  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'VIP Experience Group of 10','VIP group booking with seated service and 3-course plated dinner.',       899.00,  10,  10, 1, 10, 'active');
+  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'Standard Single',           'Standard entry for one guest.',                                          85.00, 120, 120, 6, 1,  'active'),
+  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'Standard Couples',          'Standard entry for two guests.',                                         165.00,  60,  60, 4, 2,  'active'),
+  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'Standard Group of 10',      'Group booking for ten guests.',                                          800.00,  12,  12, 1, 10, 'active'),
+  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'VIP Experience Single',     'VIP seated service plus a 3-course plated dinner for one guest.',         110.00,  80,  80, 6, 1,  'active'),
+  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'VIP Experience Couples',    'VIP seated service plus a 3-course plated dinner for two guests.',        210.00,  40,  40, 4, 2,  'active'),
+  ('ad40d369-f379-4f2a-a19f-41c5fe7d1f72', 'VIP Experience Group of 10','VIP group booking with seated service and 3-course plated dinner.',       1000.00,  10,  10, 1, 10, 'active');
 
 -- 4. Verify
 select name, price_gbp, guests_per_unit, capacity, remaining, status
