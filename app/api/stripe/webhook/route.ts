@@ -73,6 +73,10 @@ async function processCheckoutSession(session: Stripe.Checkout.Session, stripeEv
   const tierId       = metadata.tierId;
   const quantity     = Number(metadata.quantity ?? 1);
   const guestsPerUnit = Number(metadata.guestsPerUnit ?? 1);
+  const unitPriceGbp  = Number(metadata.unitPriceGbp);
+  const unitPricePence = Number.isFinite(unitPriceGbp) && unitPriceGbp > 0
+    ? Math.round(unitPriceGbp * 100)
+    : undefined;
   const buyerName    = metadata.buyerName ?? session.customer_details?.name ?? "Guest";
   const buyerEmail   = metadata.buyerEmail ?? session.customer_details?.email ?? "";
   const buyerPhone   = metadata.buyerPhone ?? session.customer_details?.phone ?? "";
@@ -94,6 +98,7 @@ async function processCheckoutSession(session: Stripe.Checkout.Session, stripeEv
     tierId,
     quantity,
     guestsPerUnit,
+    unitPricePence,
     buyerName,
     buyerEmail,
     buyerPhone,
