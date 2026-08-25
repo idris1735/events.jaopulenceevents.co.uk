@@ -97,54 +97,9 @@ export function PurchaseForm({ eventId, eventSlug, tiers }: PurchaseFormProps) {
   }
 
   const isSoldOut = activeTiers.length === 0;
-  const hasGroupDeal = tiers.some((tier) => appliesGroupDiscount(tier));
 
   return (
     <form className="stack" onSubmit={handleSubmit} style={{ gap: "1.25rem" }}>
-
-      {/* ── Group discount banner ── */}
-      {!isSoldOut && hasGroupDeal && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.8rem",
-            padding: "0.9rem 1rem",
-            borderRadius: "12px",
-            background: "linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.05))",
-            border: "1px solid rgba(212,175,55,0.5)"
-          }}
-        >
-          <span
-            style={{
-              minWidth: "2.7rem",
-              height: "2.7rem",
-              borderRadius: "8px",
-              background: "var(--gold-soft)",
-              color: "#0c0c0c",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 800,
-              fontSize: "0.95rem",
-              flexShrink: 0
-            }}
-          >
-            10+
-          </span>
-          <div>
-            <p style={{ margin: 0, fontSize: "0.68rem", letterSpacing: "0.18rem", fontWeight: 700, color: "var(--gold-soft)", textTransform: "uppercase" }}>
-              Group discount
-            </p>
-            <p style={{ margin: "0.15rem 0 0", fontSize: "1.05rem", fontWeight: 800, color: "var(--text-strong)", lineHeight: 1.2 }}>
-              {formatCurrencyPounds(GROUP_DISCOUNT_UNIT_PRICE_GBP)} per ticket for groups of {GROUP_DISCOUNT_THRESHOLD}+
-            </p>
-            <p style={{ margin: "0.2rem 0 0", fontSize: "0.74rem", color: "var(--muted)" }}>
-              Applied automatically at checkout — no code needed.
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* ── Step 1: Choose tier ── */}
       <div>
@@ -184,21 +139,8 @@ export function PurchaseForm({ eventId, eventSlug, tiers }: PurchaseFormProps) {
                       </div>
                     )}
                     {appliesGroupDiscount(tier) && (
-                      <div
-                        style={{
-                          display: "inline-block",
-                          marginBottom: "0.4rem",
-                          padding: "0.2rem 0.6rem",
-                          borderRadius: "999px",
-                          background: "rgba(212,175,55,0.14)",
-                          border: "1px solid rgba(212,175,55,0.45)",
-                          color: "var(--gold-soft)",
-                          fontSize: "0.7rem",
-                          fontWeight: 700,
-                          letterSpacing: "0.05em"
-                        }}
-                      >
-                        GROUP OF {GROUP_DISCOUNT_THRESHOLD}+ · {formatCurrencyPounds(GROUP_DISCOUNT_UNIT_PRICE_GBP)} EACH
+                      <div style={{ color: "var(--gold-soft)", fontSize: "0.72rem", fontWeight: 600, marginBottom: "0.35rem" }}>
+                        Groups of {GROUP_DISCOUNT_THRESHOLD}+ · {formatCurrencyPounds(GROUP_DISCOUNT_UNIT_PRICE_GBP)} per ticket
                       </div>
                     )}
                     <div style={{ fontSize: "0.72rem", color: unavailable ? "#f5a5a5" : tier.remaining <= 10 ? "var(--text-warning)" : "var(--muted)" }}>
