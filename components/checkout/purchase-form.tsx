@@ -4,12 +4,6 @@ import { useMemo, useState } from "react";
 
 import { TicketTierRecord } from "@/lib/types";
 import { formatCurrencyPounds } from "@/lib/utils";
-import {
-  appliesGroupDiscount,
-  getUnitPriceGbp,
-  GROUP_DISCOUNT_THRESHOLD,
-  GROUP_DISCOUNT_UNIT_PRICE_GBP
-} from "@/lib/pricing";
 
 interface PurchaseFormProps {
   eventId: string;
@@ -66,13 +60,7 @@ export function PurchaseForm({ eventId, eventSlug, tiers }: PurchaseFormProps) {
   const isBundle      = guestsPerUnit > 1;
   const totalGuests   = quantity * guestsPerUnit;
   const maxQty        = Math.min(selectedTier?.max_per_order ?? 6, selectedTier?.remaining ?? 6);
-
-  const unitPrice            = selectedTier ? getUnitPriceGbp(selectedTier, quantity) : 0;
-  const listUnitPrice        = selectedTier?.price_gbp ?? 0;
-  const total                = unitPrice * quantity;
-  const groupDiscountApplied = selectedTier
-    ? appliesGroupDiscount(selectedTier) && quantity >= GROUP_DISCOUNT_THRESHOLD
-    : false;
+  const total         = selectedTier ? selectedTier.price_gbp * quantity : 0;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -138,11 +126,6 @@ export function PurchaseForm({ eventId, eventSlug, tiers }: PurchaseFormProps) {
                         {tier.description}
                       </div>
                     )}
-                    {appliesGroupDiscount(tier) && (
-                      <div style={{ color: "var(--gold-soft)", fontSize: "0.72rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                        Groups of {GROUP_DISCOUNT_THRESHOLD}+ · {formatCurrencyPounds(GROUP_DISCOUNT_UNIT_PRICE_GBP)} per ticket
-                      </div>
-                    )}
                     <div style={{ fontSize: "0.72rem", color: unavailable ? "#f5a5a5" : tier.remaining <= 10 ? "var(--text-warning)" : "var(--muted)" }}>
                       {unavailable ? "Sold out" : `${tier.remaining} remaining`}
                     </div>
@@ -179,13 +162,6 @@ export function PurchaseForm({ eventId, eventSlug, tiers }: PurchaseFormProps) {
               {maxQty > 1 && (
                 <p style={{ margin: "0.1rem 0 0", fontSize: "0.72rem", color: "var(--faint)" }}>
                   Up to {maxQty} per order
-                </p>
-              )}
-              {selectedTier && appliesGroupDiscount(selectedTier) && (
-                <p style={{ margin: "0.15rem 0 0", fontSize: "0.74rem", color: "var(--gold-soft)", fontWeight: 600 }}>
-                  {groupDiscountApplied
-                    ? `Group discount applied · ${formatCurrencyPounds(GROUP_DISCOUNT_UNIT_PRICE_GBP)} per ticket`
-                    : `Groups of ${GROUP_DISCOUNT_THRESHOLD}+ pay ${formatCurrencyPounds(GROUP_DISCOUNT_UNIT_PRICE_GBP)} per ticket`}
                 </p>
               )}
             </div>
@@ -282,32 +258,17 @@ export function PurchaseForm({ eventId, eventSlug, tiers }: PurchaseFormProps) {
                   {isBundle && <span style={{ color: "var(--muted)", fontWeight: 400 }}> · {totalGuests} guests</span>}
                 </p>
               </div>
-              <div style={{ textAlign: "right" }}>
-                {groupDiscountApplied && (
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: "0.8rem",
-                      color: "var(--muted)",
-                      textDecoration: "line-through",
-                      marginBottom: "0.15rem"
-                    }}
-                  >
-                    {formatCurrencyPounds(listUnitPrice * quantity)}
-                  </span>
-                )}
-                <span
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "1.7rem",
-                    fontWeight: 700,
-                    color: "var(--gold-soft)",
-                    lineHeight: 1
-                  }}
-                >
-                  {formatCurrencyPounds(total)}
-                </span>
-              </div>
+              <span
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "1.7rem",
+                  fontWeight: 700,
+                  color: "var(--gold-soft)",
+                  lineHeight: 1
+                }}
+              >
+                {formatCurrencyPounds(total)}
+              </span>
             </div>
 
             {/* BNPL hint */}

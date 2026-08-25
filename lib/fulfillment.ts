@@ -17,7 +17,6 @@ interface FulfillmentInput {
   tierId: string;
   quantity: number;
   guestsPerUnit: number;
-  unitPricePence?: number;
   buyerName: string;
   buyerEmail: string;
   buyerPhone: string;
@@ -192,7 +191,7 @@ export async function processPaidCheckout(input: FulfillmentInput) {
       order_id:        orderId,
       ticket_tier_id:  tier.id,
       quantity:        input.quantity,
-      unit_price_pence: input.unitPricePence ?? Math.round(tier.price_gbp * 100)
+      unit_price_pence: Math.round(tier.price_gbp * 100)
     });
     if (itemError) throw new Error(itemError.message);
   }

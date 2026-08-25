@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { getEventBundle } from "@/lib/data";
 import { getBaseUrl } from "@/lib/env";
 import { releaseTicketInventory, reserveTicketInventory } from "@/lib/inventory";
-import { appliesGroupDiscount, getUnitPriceGbp, GROUP_DISCOUNT_THRESHOLD } from "@/lib/pricing";
 import { getStripe } from "@/lib/stripe";
 import { isWithinSalesWindow } from "@/lib/utils";
 import { checkoutPayloadSchema } from "@/lib/validation";
@@ -45,10 +44,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Requested quantity exceeds available capacity." }, { status: 400 });
   }
 
-  // Group discount: groups of 10+ pay £70 per ticket, applied automatically.
-  const groupDiscountApplied = appliesGroupDiscount(tier) && quantity >= GROUP_DISCOUNT_THRESHOLD;
-  const unitPriceGbp = getUnitPriceGbp(tier, quantity);
-
   // Finding 2 fix: reserve inventory BEFORE creating the Stripe session
   // This prevents overselling when multiple buyers checkout simultaneously
   const reservation = await reserveTicketInventory(tier.id, quantity);
@@ -77,12 +72,10 @@ export async function POST(request: Request) {
           quantity,
           price_data: {
             currency: "gbp",
-            unit_amount: Math.round(unitPriceGbp * 100),
+            unit_amount: Math.round(tier.price_gbp * 100),
             product_data: {
               name: `${bundle.event.name} | ${tier.name}`,
-              description: groupDiscountApplied
-                ? `${tier.description} Group of 10+ discount applied.`
-                : tier.description
+              description: tier.description
             }
           }
         }
@@ -93,8 +86,6 @@ export async function POST(request: Request) {
         tierId,
         quantity: String(quantity),
         guestsPerUnit: String(tier.guests_per_unit ?? 1),
-        unitPriceGbp: String(unitPriceGbp),
-        groupDiscount: String(groupDiscountApplied),
         buyerName,
         buyerEmail,
         buyerPhone
